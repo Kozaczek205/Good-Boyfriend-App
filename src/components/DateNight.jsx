@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { dateNightIdeas } from '../data/suggestions'
+import { useTheme } from '../context/ThemeContext'
+import { t } from '../theme'
 
 export default function DateNight() {
   const [filter, setFilter] = useLocalStorage('dateFilter', 'all')
@@ -32,6 +34,9 @@ export default function DateNight() {
 
   const removeSaved = (i) =>
     setSavedDates(prev => prev.filter((_, j) => j !== i))
+
+  const { darkMode } = useTheme()
+  const th = t(darkMode)
 
   return (
     <div className="page">
@@ -80,11 +85,7 @@ export default function DateNight() {
 
         {/* Result */}
         {picked ? (
-          <div className="card bounce-in" style={{
-            marginBottom: 14,
-            background: 'linear-gradient(135deg, #fff1f2, #ffe4e6)',
-            borderColor: '#fda4af',
-          }}>
+          <div className="card bounce-in" style={{ marginBottom: 14, ...th.roseCard }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
               <span style={{ fontSize: 44, lineHeight: 1 }}>{picked.emoji}</span>
               <div style={{ flex: 1 }}>
@@ -92,7 +93,7 @@ export default function DateNight() {
                   <span className="chip">{picked.type}</span>
                   <span className="chip chip-green">{picked.cost === 0 ? 'Free' : `~$${picked.cost}`}</span>
                 </div>
-                <div style={{ fontSize: 20, fontWeight: 800, color: '#1f2937', lineHeight: 1.25 }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: th.text, lineHeight: 1.25 }}>
                   {picked.name}
                 </div>
               </div>
@@ -137,12 +138,12 @@ export default function DateNight() {
             {savedDates.map((d, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 12px', background: '#fff',
-                borderRadius: 12, marginBottom: 6, border: '1px solid #ffe4e6',
+                padding: '10px 12px', ...th.plainItem,
+                borderRadius: 12, marginBottom: 6, border: `1px solid ${th.plainItem.borderColor}`,
               }}>
                 <span style={{ fontSize: 22 }}>{d.emoji}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>{d.name}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: th.textSub }}>{d.name}</div>
                   <div style={{ fontSize: 11, color: '#9ca3af' }}>
                     {d.cost === 0 ? 'Free' : `~$${d.cost}`} · {d.type}
                   </div>

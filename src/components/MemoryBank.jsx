@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { useTheme } from '../context/ThemeContext'
+import { t } from '../theme'
 
 const CATEGORIES = ['likes', 'wants', 'interested in', 'favorite', 'dislikes']
 
@@ -93,18 +95,20 @@ function AddItemForm({ onAdd, type }) {
 }
 
 function ItemCard({ item, onDelete }) {
+  const { darkMode } = useTheme()
+  const th = t(darkMode)
   return (
     <div style={{
       display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-      padding: '12px 14px', background: '#fff', borderRadius: 12,
-      border: '1px solid #ffe4e6', marginBottom: 8,
+      padding: '12px 14px', ...th.plainItem, borderRadius: 12,
+      border: `1px solid ${th.plainItem.borderColor}`, marginBottom: 8,
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
           <span className={categoryColors[item.category] || 'chip'}>{item.category}</span>
           {item.estimatedCost > 0 && <span className="chip chip-green">~${item.estimatedCost}</span>}
         </div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#1f2937', lineHeight: 1.3 }}>{item.name}</div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: th.text, lineHeight: 1.3 }}>{item.name}</div>
         {item.notes && (
           <div style={{ fontSize: 12, color: '#6b7280', marginTop: 3, fontStyle: 'italic' }}>
             {item.notes}
@@ -129,6 +133,8 @@ export default function MemoryBank() {
   const [tab, setTab] = useState('memory')
   const [memoryBank, setMemoryBank] = useLocalStorage('memoryBank', [])
   const [wishlist, setWishlist] = useLocalStorage('wishlist', [])
+  const { darkMode } = useTheme()
+  const th = t(darkMode)
 
   const addMemory = (item) => setMemoryBank(prev => [item, ...prev])
   const addWishlist = (item) => setWishlist(prev => [item, ...prev])
@@ -166,17 +172,19 @@ export default function MemoryBank() {
         {/* Context banner */}
         {tab === 'wishlist' ? (
           <div style={{
-            background: '#f0fdf4', border: '1px solid #bbf7d0',
+            ...th.softGreen,
+            border: `1px solid ${th.softGreen.borderColor}`,
             borderRadius: 12, padding: '10px 14px', marginBottom: 14,
-            fontSize: 12, color: '#16a34a',
+            fontSize: 12,
           }}>
             🤫 Wishlist items are silently used by the daily randomizer. She'll never know!
           </div>
         ) : (
           <div style={{
-            background: '#eff6ff', border: '1px solid #bfdbfe',
+            ...th.softBlue,
+            border: `1px solid ${th.softBlue.borderColor}`,
             borderRadius: 12, padding: '10px 14px', marginBottom: 14,
-            fontSize: 12, color: '#2563eb',
+            fontSize: 12,
           }}>
             💡 Log things she mentions liking — these help personalize your daily suggestions.
           </div>

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { occasionGiftIdeas } from '../data/suggestions'
+import { useTheme } from '../context/ThemeContext'
+import { t } from '../theme'
 
 const OCCASION_TYPES = ['birthday', 'anniversary', 'valentines', 'christmas', 'other']
 
@@ -104,6 +106,8 @@ function AddOccasionForm({ onAdd }) {
 }
 
 function OccasionCard({ occ, onDelete }) {
+  const { darkMode } = useTheme()
+  const th = t(darkMode)
   const days = daysUntil(occ.date)
   const isUrgent = days <= occ.leadTime
   const gifts = occasionGiftIdeas[occ.type] || occasionGiftIdeas.default
@@ -134,18 +138,18 @@ function OccasionCard({ occ, onDelete }) {
       {isUrgent && (
         <div style={{ marginTop: 12 }}>
           <div style={{
-            background: '#fff1f2', borderRadius: 10, padding: '8px 12px',
-            fontSize: 12, color: '#f43f5e', fontWeight: 600, marginBottom: 10,
+            ...th.urgentBanner, borderRadius: 10, padding: '8px 12px',
+            fontSize: 12, fontWeight: 600, marginBottom: 10,
           }}>
             ⏰ Coming up soon — here are some gift ideas:
           </div>
           {gifts.map((g, i) => (
             <div key={i} style={{
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              padding: '8px 10px', background: '#fafafa',
-              borderRadius: 8, marginBottom: 6, border: '1px solid #ffe4e6',
+              padding: '8px 10px', ...th.subItem,
+              borderRadius: 8, marginBottom: 6, border: `1px solid ${th.subItem.borderColor}`,
             }}>
-              <span style={{ fontSize: 13, color: '#374151', fontWeight: 500 }}>{g.name}</span>
+              <span style={{ fontSize: 13, color: th.textSub, fontWeight: 500 }}>{g.name}</span>
               <span className="chip chip-green">~${g.cost}</span>
             </div>
           ))}

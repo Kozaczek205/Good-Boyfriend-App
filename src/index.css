@@ -484,3 +484,116 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 10px;
   }
 }
+
+/* ── Dark mode ── */
+body.dark {
+  background: #18111a;
+  color: #f5f0f7;
+}
+
+body.dark #root {
+  background: #18111a;
+  box-shadow: none;
+}
+
+body.dark .card {
+  background: #23152a;
+  border-color: #3d2040;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+body.dark .btn-ghost {
+  background: #2d1a35;
+  color: var(--rose-400);
+}
+
+body.dark .btn-ghost:hover {
+  background: #3d2040;
+}
+
+body.dark .btn-outline {
+  background: transparent;
+  border-color: #3d2040;
+  color: var(--rose-400);
+}
+
+body.dark .input {
+  background: #2d1a35;
+  border-color: #4d2d50;
+  color: #f5f0f7;
+}
+
+body.dark .input::placeholder {
+  color: #6b5a7a;
+}
+
+body.dark .input:focus {
+  border-color: var(--rose-400);
+  box-shadow: 0 0 0 3px rgba(244,63,94,0.15);
+}
+
+body.dark select.input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b5a7a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+}
+
+body.dark .toggle-group {
+  background: #2d1a35;
+}
+
+body.dark .toggle-btn {
+  color: #6b5a7a;
+}
+
+body.dark .toggle-btn.active {
+  background: #3d2040;
+  color: var(--rose-400);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+body.dark .section-title  { color: #f5f0f7; }
+body.dark .section-subtitle { color: #9980a8; }
+body.dark .label { color: #9980a8; }
+
+body.dark .chip         { background: #3d2040; color: var(--rose-300); }
+body.dark .chip-green   { background: #0f2018; color: #4ade80; }
+body.dark .chip-amber   { background: #201500; color: #fbbf24; }
+body.dark .chip-blue    { background: #0f1828; color: #60a5fa; }
+body.dark .chip-purple  { background: #1e1430; color: #c084fc; }
+
+body.dark .ll-card              { background: #2d1a35; border-color: transparent; }
+body.dark .ll-card.selected     { background: #3d2040; border-color: var(--rose-400); }
+body.dark .ll-card .ll-info h4  { color: #f5f0f7; }
+body.dark .ll-card .ll-info p   { color: #9980a8; }
+
+body.dark .empty-state { color: #6b5a7a; }
+
+body.dark .divider { background: #3d2040; }
+
+body.dark .toast {
+  background: #f5f0f7;
+  color: #18111a;
+}
+
+body.dark .bottom-nav {
+  background: rgba(24, 17, 26, 0.96);
+  border-color: #3d2040;
+}
+
+body.dark .sidebar {
+  background: #1a0f1e;
+  border-color: #3d2040;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.4);
+}
+
+body.dark .sidebar-item:hover  { background: #2d1a35; }
+body.dark .sidebar-item.active { background: #3d2040; }
+body.dark .sidebar-label       { color: #9980a8; }
+body.dark .sidebar-item.active .sidebar-label { color: var(--rose-400); }
+
+body.dark input[type="range"] {
+  background: #3d2040;
+}
+
+body.dark .main-content {
+  background: #18111a;
+}

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { bigGestureIdeas } from '../data/suggestions'
+import { useTheme } from '../context/ThemeContext'
+import { t } from '../theme'
 
 const LOVE_LANGUAGES = [
   { id: 'gifts',                icon: '🎁', label: 'Receiving Gifts',      desc: 'Thoughtful presents mean the world to her' },
@@ -20,6 +22,8 @@ export default function Profile() {
   const [nameInput, setNameInput] = useState(partnerName)
   const [nameSaved, setNameSaved] = useState(false)
   const [selectedGesture, setSelectedGesture] = useState(null)
+  const { darkMode, setDarkMode } = useTheme()
+  const th = t(darkMode)
 
   const monthSinceGesture = !lastBigGesture ||
     Date.now() - new Date(lastBigGesture).getTime() > 30 * 24 * 60 * 60 * 1000
@@ -43,6 +47,34 @@ export default function Profile() {
       </div>
 
       <div style={{ padding: '0 16px' }}>
+        {/* Dark mode toggle */}
+        <div className="card" style={{ marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: th.text }}>{darkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}</div>
+            <div style={{ fontSize: 12, color: th.textFaint, marginTop: 2 }}>Tap to switch</div>
+          </div>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            style={{
+              width: 52, height: 28, borderRadius: 100,
+              background: darkMode ? '#f43f5e' : '#e5e7eb',
+              border: 'none', cursor: 'pointer', position: 'relative',
+              transition: 'background 0.25s',
+              flexShrink: 0,
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: 3,
+              left: darkMode ? 26 : 3,
+              width: 22, height: 22, borderRadius: '50%',
+              background: '#fff',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+              transition: 'left 0.25s',
+              display: 'block',
+            }} />
+          </button>
+        </div>
+
         {/* Partner name */}
         <div className="card" style={{ marginBottom: 14 }}>
           <div className="label" style={{ marginBottom: 8 }}>Her Name</div>
@@ -63,7 +95,7 @@ export default function Profile() {
             </button>
           </div>
           {partnerName && (
-            <div style={{ marginTop: 8, fontSize: 12, color: '#fb7185' }}>
+            <div style={{ marginTop: 8, fontSize: 12, color: '#fb7185', opacity: darkMode ? 0.9 : 1 }}>
               All suggestions will be personalized for {partnerName} 💕
             </div>
           )}
@@ -99,25 +131,26 @@ export default function Profile() {
 
           {monthSinceGesture ? (
             <div style={{
-              background: 'linear-gradient(135deg, #faf5ff, #f3e8ff)',
-              border: '1px solid #e9d5ff',
+              ...th.softPurple,
+              border: `1px solid ${th.softPurple.borderColor}`,
               borderRadius: 14, padding: '14px',
               marginBottom: 14,
               display: 'flex', alignItems: 'center', gap: 10,
             }}>
               <span style={{ fontSize: 28 }}>🌟</span>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#7c3aed' }}>Time for a big gesture!</div>
-                <div style={{ fontSize: 12, color: '#9333ea', marginTop: 2 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: th.purpleTitle }}>Time for a big gesture!</div>
+                <div style={{ fontSize: 12, color: th.purpleText, marginTop: 2 }}>
                   Choose one below and follow the step-by-step plan.
                 </div>
               </div>
             </div>
           ) : (
             <div style={{
-              background: '#f0fdf4', border: '1px solid #bbf7d0',
+              ...th.softGreen,
+              border: `1px solid ${th.softGreen.borderColor}`,
               borderRadius: 12, padding: '10px 14px', marginBottom: 14,
-              fontSize: 12, color: '#16a34a',
+              fontSize: 12,
             }}>
               ✅ You did a big gesture this month — she's lucky to have you! 💚
               {lastBigGesture && (
@@ -167,16 +200,16 @@ export default function Profile() {
                   key={i}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '12px 14px', background: '#fff',
-                    borderRadius: 12, border: '1px solid #ffe4e6',
+                    padding: '12px 14px', ...th.gestureItem,
+                    borderRadius: 12, border: `1px solid ${th.gestureItem.borderColor}`,
                     cursor: 'pointer', transition: 'all 0.18s',
                   }}
                   onClick={() => setSelectedGesture(g)}
                 >
                   <span style={{ fontSize: 28 }}>{g.emoji}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1f2937' }}>{g.name}</div>
-                    <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2, lineHeight: 1.4 }}>{g.description}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: th.text }}>{g.name}</div>
+                    <div style={{ fontSize: 12, color: th.textFaint, marginTop: 2, lineHeight: 1.4 }}>{g.description}</div>
                   </div>
                   <span style={{ color: '#fda4af', fontSize: 20, flexShrink: 0 }}>›</span>
                 </div>

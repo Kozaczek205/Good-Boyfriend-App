@@ -6,6 +6,7 @@ import DateNight from './components/DateNight'
 import Profile from './components/Profile'
 import BottomNav from './components/BottomNav'
 import Sidebar from './components/Sidebar'
+import { ThemeProvider } from './context/ThemeContext'
 
 export default function App() {
   const [tab, setTab] = useState('home')
@@ -19,12 +20,14 @@ export default function App() {
   }
 
   return (
-    <div className="app-layout">
-      <Sidebar current={tab} onChange={setTab} />
-      <main className="main-content">
-        {screens[tab]}
-      </main>
-      <BottomNav current={tab} onChange={setTab} />
-    </div>
+    <ThemeProvider>
+      <div className="app-layout">
+        <Sidebar current={tab} onChange={setTab} />
+        <main className="main-content">
+          {screens[tab]}
+        </main>
+        <BottomNav current={tab} onChange={setTab} />
+      </div>
+    </ThemeProvider>
   )
 }

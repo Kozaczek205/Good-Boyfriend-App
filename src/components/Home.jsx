@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { giftSuggestions, gestureSuggestions } from '../data/suggestions'
+import { useTheme } from '../context/ThemeContext'
+import { t } from '../theme'
 
 const todayStr = () => new Date().toISOString().split('T')[0]
 
@@ -75,6 +77,9 @@ export default function Home() {
   const [isSpinning, setIsSpinning] = useState(false)
   const [toast, setToast] = useState('')
   const [lastBigGesture] = useLocalStorage('lastBigGesture', null)
+
+  const { darkMode } = useTheme()
+  const th = t(darkMode)
 
   const alreadySpunToday = todaySpin?.date === todayStr()
 
@@ -157,8 +162,8 @@ export default function Home() {
         {/* Monthly big gesture nudge */}
         {monthSinceGesture && (
           <div style={{
-            background: 'linear-gradient(135deg, #faf5ff, #f3e8ff)',
-            border: '1px solid #e9d5ff',
+            ...th.softPurple,
+            border: `1px solid ${th.softPurple.borderColor}`,
             borderRadius: 14,
             padding: '12px 14px',
             marginBottom: 12,
@@ -168,8 +173,8 @@ export default function Home() {
           }}>
             <span style={{ fontSize: 24 }}>🌟</span>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed' }}>Monthly Big Gesture Due!</div>
-              <div style={{ fontSize: 12, color: '#9333ea', marginTop: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: th.purpleTitle }}>Monthly Big Gesture Due!</div>
+              <div style={{ fontSize: 12, color: th.purpleText, marginTop: 1 }}>
                 Check the Events tab to plan something meaningful this month.
               </div>
             </div>
@@ -235,8 +240,7 @@ export default function Home() {
         {alreadySpunToday ? (
           <div className="card bounce-in" style={{
             marginBottom: 14,
-            background: 'linear-gradient(135deg, #fff1f2, #ffe4e6)',
-            borderColor: '#fda4af',
+            ...th.roseCard,
           }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
               <span style={{ fontSize: 40, lineHeight: 1 }}>{todaySpin.emoji || '🎁'}</span>
@@ -246,7 +250,7 @@ export default function Home() {
                   {todaySpin.cost > 0 && <span className="chip chip-green">${todaySpin.cost}</span>}
                   {todaySpin.isPersonalized && <span className="chip chip-purple">⭐ Personal pick</span>}
                 </div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: '#1f2937', lineHeight: 1.25 }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: th.text, lineHeight: 1.25 }}>
                   {todaySpin.name}
                 </div>
                 {todaySpin.note && (
@@ -260,8 +264,8 @@ export default function Home() {
             {wasRecentlyDone && (
               <div style={{
                 marginTop: 10, padding: '8px 12px',
-                background: '#fffbeb', borderRadius: 10,
-                fontSize: 12, color: '#d97706', fontWeight: 600,
+                ...th.softAmber, borderRadius: 10,
+                fontSize: 12, fontWeight: 600,
                 display: 'flex', alignItems: 'center', gap: 6,
               }}>
                 ⚠️ You did this recently — consider something different!
@@ -312,14 +316,14 @@ export default function Home() {
             {recentGestures.slice(0, 5).map((g, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '10px 12px', background: '#fff',
+                padding: '10px 12px', ...th.plainItem,
                 borderRadius: 12, marginBottom: 6,
-                border: '1px solid #ffe4e6',
+                border: `1px solid ${th.plainItem.borderColor}`,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: 22 }}>{g.emoji || (g.mode === 'gesture' ? '💫' : '🎁')}</span>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', lineHeight: 1.3 }}>{g.name}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: th.textSub, lineHeight: 1.3 }}>{g.name}</div>
                     <div style={{ fontSize: 11, color: '#9ca3af' }}>
                       {new Date(g.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
