@@ -18,11 +18,14 @@ export default function Profile() {
   const [partnerName, setPartnerName] = useLocalStorage('partnerName', '')
   const [loveLanguage, setLoveLanguage] = useLocalStorage('loveLanguage', '')
   const [lastBigGesture, setLastBigGesture] = useLocalStorage('lastBigGesture', null)
+  const [anniversaryDate, setAnniversaryDate] = useLocalStorage('anniversaryDate', '')
 
   const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage('notificationsEnabled', false)
   const [monthlyBudget, setMonthlyBudget] = useLocalStorage('monthlyBudget', 0)
   const [nameInput, setNameInput] = useState(partnerName)
   const [nameSaved, setNameSaved] = useState(false)
+  const [annivInput, setAnnivInput] = useState(anniversaryDate)
+  const [annivSaved, setAnnivSaved] = useState(false)
   const [selectedGesture, setSelectedGesture] = useState(null)
   const [importError, setImportError] = useState('')
   const { darkMode, setDarkMode } = useTheme()
@@ -35,6 +38,15 @@ export default function Profile() {
     setPartnerName(nameInput.trim())
     setNameSaved(true)
     setTimeout(() => setNameSaved(false), 1800)
+  }
+
+  const saveAnniversary = () => {
+    const val = annivInput.trim()
+    if (!val || /^\d{2}-\d{2}$/.test(val)) {
+      setAnniversaryDate(val)
+      setAnnivSaved(true)
+      setTimeout(() => setAnnivSaved(false), 1800)
+    }
   }
 
   const markGestureDone = () => {
@@ -135,6 +147,33 @@ export default function Profile() {
           {partnerName && (
             <div style={{ marginTop: 8, fontSize: 12, color: '#fb7185', opacity: darkMode ? 0.9 : 1 }}>
               All suggestions will be personalized for {partnerName} 💕
+            </div>
+          )}
+        </div>
+
+        {/* Anniversary date */}
+        <div className="card" style={{ marginBottom: 14 }}>
+          <div className="label" style={{ marginBottom: 8 }}>Anniversary Date</div>
+          <div style={{ fontSize: 12, color: th.textFaint, marginBottom: 10 }}>
+            Enter your anniversary date (MM-DD) — a countdown will appear on the home screen 60 days before.
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input
+              className="input"
+              value={annivInput}
+              onChange={e => setAnnivInput(e.target.value)}
+              placeholder="e.g. 06-15"
+              pattern="\d{2}-\d{2}"
+              onKeyDown={e => e.key === 'Enter' && saveAnniversary()}
+            />
+            <button className="btn btn-primary btn-sm" onClick={saveAnniversary}
+              style={{ whiteSpace: 'nowrap', minWidth: 72 }}>
+              {annivSaved ? '✓ Saved' : 'Save'}
+            </button>
+          </div>
+          {anniversaryDate && (
+            <div style={{ marginTop: 8, fontSize: 12, color: '#fb7185' }}>
+              💍 Countdown shows on home screen when within 60 days
             </div>
           )}
         </div>

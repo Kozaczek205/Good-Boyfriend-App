@@ -4,6 +4,7 @@ import MemoryBank from './components/MemoryBank'
 import Occasions from './components/Occasions'
 import DateNight from './components/DateNight'
 import Profile from './components/Profile'
+import Stats from './components/Stats'
 import Onboarding from './components/Onboarding'
 import BottomNav from './components/BottomNav'
 import Sidebar from './components/Sidebar'
@@ -30,6 +31,7 @@ function AppInner() {
     memory:    <MemoryBank />,
     occasions: <Occasions />,
     datenight: <DateNight />,
+    stats:     <Stats />,
     profile:   <Profile />,
   }
 

@@ -10,8 +10,9 @@ const categoryColors = {
   'interested in': 'chip chip-blue', 'favorite': 'chip chip-purple', 'dislikes': 'chip chip-amber',
 }
 
-const GIFT_EMOJIS   = ['🎁','🌸','🍫','💌','📚','🕯️','🎵','🛁','💅','☕','🌹','🎀','🍓','🥐','🌿']
+const GIFT_EMOJIS    = ['🎁','🌸','🍫','💌','📚','🕯️','🎵','🛁','💅','☕','🌹','🎀','🍓','🥐','🌿']
 const GESTURE_EMOJIS = ['💫','🍳','🎬','🎙️','🤗','🧺','🧹','💆','🥞','📺','🚗','📩','🎞️','🎵','👑']
+const PLACE_CATEGORIES = ['restaurant', 'café', 'bar', 'activity', 'park', 'museum', 'shop', 'other']
 
 function AddItemForm({ onAdd, type }) {
   const [name, setName] = useState('')
@@ -125,6 +126,53 @@ function AddCustomIdeaForm({ onAdd, kind }) {
   )
 }
 
+function AddPlaceForm({ onAdd }) {
+  const [open, setOpen] = useState(false)
+  const [name, setName] = useState('')
+  const [category, setCategory] = useState('restaurant')
+  const [notes, setNotes] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!name.trim()) return
+    onAdd({ id: Date.now(), name: name.trim(), category, notes: notes.trim() })
+    setName(''); setNotes('')
+    setOpen(false)
+  }
+
+  if (!open) return (
+    <button className="btn btn-ghost btn-full" style={{ marginBottom: 14 }} onClick={() => setOpen(true)}>
+      + Add Place
+    </button>
+  )
+
+  return (
+    <form onSubmit={handleSubmit} className="card" style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#f43f5e', marginBottom: 12 }}>📍 New Place</div>
+      <div className="form-group">
+        <label className="label">Name</label>
+        <input className="input" value={name} onChange={e => setName(e.target.value)}
+          placeholder="e.g. That little Italian place on 5th" autoFocus required />
+      </div>
+      <div className="form-group">
+        <label className="label">Category</label>
+        <select className="input" value={category} onChange={e => setCategory(e.target.value)}>
+          {PLACE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
+      <div className="form-group">
+        <label className="label">Notes (optional)</label>
+        <input className="input" value={notes} onChange={e => setNotes(e.target.value)}
+          placeholder="e.g. She mentioned it after seeing it on Instagram" />
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Save</button>
+        <button type="button" className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setOpen(false)}>Cancel</button>
+      </div>
+    </form>
+  )
+}
+
 function ItemCard({ item, onDelete }) {
   const { darkMode } = useTheme()
   const th = t(darkMode)
@@ -166,6 +214,7 @@ export default function MemoryBank() {
   const [wishlist, setWishlist]       = useLocalStorage('wishlist', [])
   const [customGifts, setCustomGifts]         = useLocalStorage('customGifts', [])
   const [customGestures, setCustomGestures]   = useLocalStorage('customGestures', [])
+  const [places, setPlaces]                   = useLocalStorage('places', [])
   const [customKind, setCustomKind]   = useState('gift')
   const { darkMode } = useTheme()
   const th = t(darkMode)
@@ -178,10 +227,12 @@ export default function MemoryBank() {
   const addCustomGesture = (item) => setCustomGestures(prev => [item, ...prev])
   const delCustomGift    = (id) => setCustomGifts(prev => prev.filter(i => i.id !== id))
   const delCustomGesture = (id) => setCustomGestures(prev => prev.filter(i => i.id !== id))
+  const addPlace         = (item) => setPlaces(prev => [item, ...prev])
+  const delPlace         = (id) => setPlaces(prev => prev.filter(i => i.id !== id))
 
-  const items  = tab === 'memory' ? memoryBank : wishlist
-  const onAdd  = tab === 'memory' ? addMemory  : addWishlist
-  const onDelete = tab === 'memory' ? delMemory : delWishlist
+  const items    = tab === 'memory' ? memoryBank : wishlist
+  const onAdd    = tab === 'memory' ? addMemory  : addWishlist
+  const onDelete = tab === 'memory' ? delMemory  : delWishlist
 
   return (
     <div className="page">
@@ -194,10 +245,40 @@ export default function MemoryBank() {
         <div className="toggle-group" style={{ marginBottom: 16 }}>
           <button className={`toggle-btn ${tab === 'memory'   ? 'active' : ''}`} onClick={() => setTab('memory')}>✨ Memories</button>
           <button className={`toggle-btn ${tab === 'wishlist' ? 'active' : ''}`} onClick={() => setTab('wishlist')}>🎁 Wishlist</button>
+          <button className={`toggle-btn ${tab === 'places'   ? 'active' : ''}`} onClick={() => setTab('places')}>📍 Places</button>
           <button className={`toggle-btn ${tab === 'custom'   ? 'active' : ''}`} onClick={() => setTab('custom')}>🎲 My Ideas</button>
         </div>
 
-        {tab === 'custom' ? (
+        {tab === 'places' ? (
+          <>
+            <div style={{ ...th.softAmber, border: `1px solid ${th.softAmber.borderColor}`, borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 12 }}>
+              📍 Restaurants, cafés, and places she wants to visit — so you always have a date idea ready.
+            </div>
+            <AddPlaceForm onAdd={addPlace} />
+            {places.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">📍</div>
+                <p>Log restaurants she mentions, places she wants to explore, or activities she'd enjoy. Perfect for planning your next date.</p>
+              </div>
+            ) : (
+              <>
+                <div className="label" style={{ marginBottom: 8 }}>{places.length} place{places.length === 1 ? '' : 's'}</div>
+                {places.map(item => (
+                  <div key={item.id} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '12px 14px', ...th.plainItem, borderRadius: 12, border: `1px solid ${th.plainItem.borderColor}`, marginBottom: 8 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                        <span className="chip chip-amber">{item.category}</span>
+                      </div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: th.text, lineHeight: 1.3 }}>{item.name}</div>
+                      {item.notes && <div style={{ fontSize: 12, color: th.textMuted, marginTop: 3, fontStyle: 'italic' }}>{item.notes}</div>}
+                    </div>
+                    <button onClick={() => delPlace(item.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#fda4af', padding: '0 0 0 10px', flexShrink: 0 }}>×</button>
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        ) : tab === 'custom' ? (
           <>
             <div style={{ ...th.softPurple, border: `1px solid ${th.softPurple.borderColor}`, borderRadius: 12, padding: '10px 14px', marginBottom: 14, fontSize: 12, color: th.purpleTitle }}>
               🎲 Custom ideas go directly into the daily randomizer pool.

@@ -7,6 +7,30 @@ import { t } from '../theme'
 const todayStr = () => new Date().toISOString().split('T')[0]
 const DAYS_MS = 24 * 60 * 60 * 1000
 
+const MOODS = [
+  { id: '',             icon: '😊', label: 'Good vibes'   },
+  { id: 'stressed',     icon: '😰', label: 'Stressed'     },
+  { id: 'tired',        icon: '😴', label: 'Low energy'   },
+  { id: 'celebrating',  icon: '🥳', label: 'Celebrating'  },
+  { id: 'reconnecting', icon: '💔', label: 'Reconnecting' },
+]
+
+const MOOD_CATEGORIES = {
+  stressed:     { gift: ['beauty', 'snacks'], gesture: ['acts of service', 'physical touch'] },
+  tired:        { gift: ['snacks', 'playlist'], gesture: ['quality time'] },
+  celebrating:  { gift: ['flowers', 'beauty'], gesture: ['quality time', 'gifts'] },
+  reconnecting: { gift: ['note', 'playlist'], gesture: ['quality time', 'words of affirmation'] },
+}
+
+function daysUntilAnniversary(mmdd) {
+  if (!mmdd) return null
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const [month, day] = mmdd.split('-').map(Number)
+  let next = new Date(today.getFullYear(), month - 1, day)
+  if (next < today) next = new Date(today.getFullYear() + 1, month - 1, day)
+  return Math.ceil((next - today) / DAYS_MS)
+}
+
 function calcStreak(recentGestures) {
   if (!recentGestures.length) return 0
   const doneDates = new Set(recentGestures.map(g => g.date))
@@ -58,10 +82,14 @@ function pickGift({ budget, loveLanguage, recentGestures, wishlist, memoryBank, 
   return pool[Math.floor(Math.random() * pool.length)]
 }
 
-function pickGesture({ loveLanguage, recentGestures, customGestures }) {
+function pickGesture({ loveLanguage, recentGestures, customGestures, mood }) {
   let pool = [...gestureSuggestions, ...(customGestures || [])]
 
-  if (loveLanguage) {
+  if (mood && MOOD_CATEGORIES[mood]) {
+    const moodLLs = MOOD_CATEGORIES[mood].gesture
+    const biased = pool.filter(g => g.loveLanguages?.some(ll => moodLLs.includes(ll)))
+    if (biased.length >= 2) pool = biased
+  } else if (loveLanguage) {
     const biased = pool.filter(g => g.loveLanguages?.includes(loveLanguage))
     if (biased.length >= 3) pool = biased
   }
@@ -87,6 +115,8 @@ export default function Home() {
   const [customGifts]                     = useLocalStorage('customGifts', [])
   const [customGestures]                  = useLocalStorage('customGestures', [])
   const [monthlyBudget]                   = useLocalStorage('monthlyBudget', 0)
+  const [anniversaryDate]                 = useLocalStorage('anniversaryDate', '')
+  const [mood, setMood]                   = useLocalStorage('currentMood', '')
   const [isSpinning, setIsSpinning]       = useState(false)
   const [toast, setToast]                 = useState('')
   const { darkMode }                      = useTheme()
@@ -97,6 +127,7 @@ export default function Home() {
   const monthStats        = getMonthlyStats(recentGestures)
   const herName           = partnerName || 'her'
   const monthSinceGesture = !lastBigGesture || Date.now() - new Date(lastBigGesture).getTime() > 30 * DAYS_MS
+  const daysToAnniversary = daysUntilAnniversary(anniversaryDate)
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2800) }
 
@@ -105,7 +136,7 @@ export default function Home() {
     setTimeout(() => {
       const result = mode === 'gift'
         ? pickGift({ budget, loveLanguage, recentGestures, wishlist, memoryBank, customGifts })
-        : pickGesture({ loveLanguage, recentGestures, customGestures })
+        : pickGesture({ loveLanguage, recentGestures, customGestures, mood })
       setTodaySpin({ ...result, date: todayStr(), mode })
       setIsSpinning(false)
     }, 650)
@@ -191,6 +222,21 @@ export default function Home() {
           </div>
         )}
 
+        {/* Anniversary countdown */}
+        {daysToAnniversary !== null && daysToAnniversary <= 60 && (
+          <div style={{ ...th.softPurple, border: `1px solid ${th.softPurple.borderColor}`, borderRadius: 14, padding: '12px 14px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 28 }}>{daysToAnniversary === 0 ? '🎊' : '💍'}</span>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: th.purpleTitle }}>
+                {daysToAnniversary === 0 ? 'Happy Anniversary! 🎉' : `Anniversary in ${daysToAnniversary} day${daysToAnniversary === 1 ? '' : 's'}!`}
+              </div>
+              <div style={{ fontSize: 12, color: th.purpleText, marginTop: 1 }}>
+                {daysToAnniversary <= 7 ? 'Time is running out — plan something special!' : 'Start planning something meaningful.'}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Mode toggle */}
         <div className="toggle-group" style={{ marginBottom: 14 }}>
           <button className={`toggle-btn ${mode === 'gift' ? 'active' : ''}`} onClick={() => setMode('gift')}>🎁 Buy Something</button>
@@ -217,6 +263,32 @@ export default function Home() {
               </div>
             </div>
             {loveLanguage && <div style={{ marginTop: 8, fontSize: 12, color: '#fb7185' }}>✨ Biasing for her love language</div>}
+          </div>
+        )}
+
+        {/* Mood picker (gesture mode only) */}
+        {mode === 'gesture' && (
+          <div style={{ marginBottom: 14 }}>
+            <div className="label" style={{ marginBottom: 8 }}>Her vibe today</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {MOODS.map(m => (
+                <button
+                  key={m.id}
+                  onClick={() => setMood(mood === m.id ? '' : m.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 4,
+                    padding: '5px 11px', borderRadius: 100,
+                    border: `1.5px solid ${mood === m.id ? '#f43f5e' : (darkMode ? '#3d2040' : '#fce7f3')}`,
+                    background: mood === m.id ? (darkMode ? '#3d1a2c' : '#fce7f3') : 'transparent',
+                    cursor: 'pointer', fontSize: 12, fontWeight: mood === m.id ? 700 : 500,
+                    color: mood === m.id ? '#f43f5e' : th.textMuted,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {m.icon} {m.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

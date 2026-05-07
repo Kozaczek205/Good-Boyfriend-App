@@ -1,9 +1,10 @@
 const tabs = [
-  { id: 'home',      emoji: '💝', label: 'Today'    },
-  { id: 'memory',    emoji: '✨', label: 'Memory'   },
-  { id: 'occasions', emoji: '🎉', label: 'Events'   },
-  { id: 'datenight', emoji: '🌙', label: 'Dates'    },
-  { id: 'profile',   emoji: '💕', label: 'Profile'  },
+  { id: 'home',      emoji: '💝', label: 'Today'   },
+  { id: 'memory',    emoji: '✨', label: 'Memory'  },
+  { id: 'occasions', emoji: '🎉', label: 'Events'  },
+  { id: 'datenight', emoji: '🌙', label: 'Dates'   },
+  { id: 'stats',     emoji: '📊', label: 'Journey' },
+  { id: 'profile',   emoji: '💕', label: 'Profile' },
 ]
 
 export default function BottomNav({ current, onChange }) {

@@ -3,6 +3,7 @@ const tabs = [
   { id: 'memory',    emoji: '✨', label: 'Memory'  },
   { id: 'occasions', emoji: '🎉', label: 'Events'  },
   { id: 'datenight', emoji: '🌙', label: 'Dates'   },
+  { id: 'stats',     emoji: '📊', label: 'Journey' },
   { id: 'profile',   emoji: '💕', label: 'Profile' },
 ]
 

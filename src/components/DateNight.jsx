@@ -3,6 +3,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 import { dateNightIdeas } from '../data/suggestions'
 import { useTheme } from '../context/ThemeContext'
 import { t } from '../theme'
+import { useWeather } from '../hooks/useWeather'
 
 export default function DateNight() {
   const [filter, setFilter] = useLocalStorage('dateFilter', 'all')
@@ -37,6 +38,7 @@ export default function DateNight() {
 
   const { darkMode } = useTheme()
   const th = t(darkMode)
+  const { weather, loading: weatherLoading } = useWeather()
 
   return (
     <div className="page">
@@ -46,6 +48,25 @@ export default function DateNight() {
       </div>
 
       <div style={{ padding: '0 16px' }}>
+        {/* Weather banner */}
+        {(weather || weatherLoading) && (
+          <div style={{ ...th.softBlue, border: `1px solid ${th.softBlue.borderColor}`, borderRadius: 12, padding: '10px 14px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+            {weatherLoading ? (
+              <span style={{ fontSize: 12, color: th.textFaint }}>Checking weather...</span>
+            ) : (
+              <>
+                <span style={{ fontSize: 28 }}>{weather.icon}</span>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: th.softBlue.color }}>{weather.label} · {weather.temp}°C</div>
+                  <div style={{ fontSize: 12, color: th.textMuted }}>
+                    {weather.outdoor ? '🌿 Perfect for an outdoor date!' : '🏠 Great day to stay cozy indoors.'}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Filters */}
         <div className="card" style={{ marginBottom: 14 }}>
           <div className="label" style={{ marginBottom: 10 }}>Vibe</div>

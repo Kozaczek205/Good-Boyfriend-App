@@ -170,6 +170,90 @@ export const bigGestureIdeas = [
       'Present it as a complete keepsake piece',
     ],
   },
+  {
+    name: 'Surprise Spa Day',
+    emoji: '🧖',
+    description: 'Book her a full day of pampering — completely planned and paid for.',
+    steps: [
+      'Find a well-reviewed spa or wellness centre near you',
+      'Book a package: massage, facial, and any extras she\'d love',
+      'Arrange for her to have the day free without suspecting anything',
+      'Drop her off or send a car — let her feel like royalty from the start',
+      'Have her favourite meal or flowers waiting when she gets home',
+    ],
+  },
+  {
+    name: '3-Course Candlelit Dinner',
+    emoji: '🍽️',
+    description: 'Cook an ambitious, restaurant-quality dinner entirely from scratch.',
+    steps: [
+      'Plan a 3-course menu around her favourite flavours and dietary needs',
+      'Buy premium ingredients and practice the trickiest dish beforehand',
+      'Set the table with candles, flowers, and cloth napkins',
+      'Dress up and serve each course with a short note about why you chose it',
+      'End with a handwritten card or small meaningful gift for dessert',
+    ],
+  },
+  {
+    name: '365 Reasons I Love You',
+    emoji: '📖',
+    description: 'Fill a jar or notebook with 365 specific, personal reasons you love her.',
+    steps: [
+      'Buy a beautiful jar, box, or small notebook',
+      'Write 365 short notes — be specific, funny, and heartfelt, not generic',
+      'Include inside jokes, little habits you love, and big things you admire',
+      'Roll or fold each note and tie with ribbon if using a jar',
+      'Present it with a note saying she can open one whenever she needs a smile',
+    ],
+  },
+  {
+    name: 'Surprise Concert or Show',
+    emoji: '🎟️',
+    description: 'Get tickets to an artist or show she loves and keep it secret until the day.',
+    steps: [
+      'Find out her favourite artist, band, comedian, or show currently touring',
+      'Buy good seats well in advance',
+      'Plan the whole evening around it — dinner beforehand, transport sorted',
+      'Reveal it the day of with a handwritten note or creative clue trail',
+      'Capture the moment she finds out — it\'ll be a memory in itself',
+    ],
+  },
+  {
+    name: 'Her Perfect Day',
+    emoji: '👑',
+    description: 'Plan her ideal day from morning to night — every detail chosen for her.',
+    steps: [
+      'Think through what her perfect day looks like: slow morning, adventure, or relaxation?',
+      'Book or prepare everything in advance: brunch spot, activity, evening plan',
+      'Handle every decision so she doesn\'t have to think about anything',
+      'Add small surprises throughout — a note in her coffee, a flower at the restaurant',
+      'End the day with a heartfelt moment: a letter, a toast, or a favourite film together',
+    ],
+  },
+  {
+    name: 'Custom Jewellery',
+    emoji: '💍',
+    description: 'Commission a meaningful piece of jewellery made just for her.',
+    steps: [
+      'Think of a symbol, date, or word that holds deep meaning for you both',
+      'Find a jeweller on Etsy or locally who does custom work',
+      'Choose her metal preference and style — subtle or statement',
+      'Allow 2–4 weeks for creation and delivery',
+      'Write a card explaining the meaning behind every detail of the piece',
+    ],
+  },
+  {
+    name: 'Plant a Memory Garden',
+    emoji: '🌱',
+    description: 'Plant her favourite flowers or herbs as a living, growing gift.',
+    steps: [
+      'Find out her favourite flowers, plants, or herbs',
+      'Choose a spot in your garden, her garden, or buy a set of beautiful pots',
+      'Plant everything together or as a surprise while she\'s out',
+      'Add a small sign or stone with a meaningful date or quote',
+      'Write her a note about how the garden will grow just like your relationship',
+    ],
+  },
 ]
 
 export const occasionGiftIdeas = {
